@@ -453,6 +453,14 @@ static void config_compute_u2froot(const char *mnemonic,
                   _("config_compute_u2froot?"), NULL,
                   _("Next screen will show"), _("the passphrase!"), NULL,
                   NULL);
+  if (!protectButton(ButtonRequestType_ButtonRequest_Other, false)) {
+  memzero(mnemonic, sizeof(mnemonic));
+  memzero(passphrase, sizeof(passphrase));
+  fsm_sendFailure(FailureType_Failure_ActionCancelled,
+                  _("u2f dismissed"));
+  layoutHome();
+  return NULL;
+}
   char oldTiny = usbTiny(1);
   mnemonic_to_seed(mnemonic, "", seed, get_u2froot_callback);  // BIP-0039
   usbTiny(oldTiny);
