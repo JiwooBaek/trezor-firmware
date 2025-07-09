@@ -152,7 +152,7 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
 }
 
 int mnemonic_check(const char *mnemonic) {
-  layoutDialogSwipe(
+  layoutDialogSwipe(NULL, _("Cancel"), _("Love"), NULL,
                 _("mnemonic check is excuted!"), NULL,
                 _("no"), _("ok!"), NULL,
                 NULL);
