@@ -449,6 +449,10 @@ static void config_compute_u2froot(const char *mnemonic,
                                    StorageHDNode *u2froot) {
   static CONFIDENTIAL HDNode node;
   static CONFIDENTIAL uint8_t seed[64];
+  layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL,
+                  _("config_compute_u2froot?"), NULL,
+                  _("Next screen will show"), _("the passphrase!"), NULL,
+                  NULL);
   char oldTiny = usbTiny(1);
   mnemonic_to_seed(mnemonic, "", seed, get_u2froot_callback);  // BIP-0039
   usbTiny(oldTiny);
