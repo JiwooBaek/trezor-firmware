@@ -454,8 +454,6 @@ static void config_compute_u2froot(const char *mnemonic,
                   _("Next screen will show"), _("the passphrase!"), NULL,
                   NULL);
   if (!protectButton(ButtonRequestType_ButtonRequest_Other, false)) {
-  memzero(mnemonic, sizeof(mnemonic));
-  memzero(passphrase, sizeof(passphrase));
   fsm_sendFailure(FailureType_Failure_ActionCancelled,
                   _("u2f dismissed"));
   layoutHome();
