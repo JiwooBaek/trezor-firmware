@@ -237,7 +237,7 @@ static const CoinInfo *fsm_getCoin(bool has_name, const char *name) {
   }
   return coin;
 }
-
+// 펌웨어 업데이트 직후 실행됨
 static HDNode *fsm_getDerivedNodeEx(const char *curve,
                                     const uint32_t *address_n,
                                     size_t address_n_count, const uint8_t *seed,
@@ -245,15 +245,6 @@ static HDNode *fsm_getDerivedNodeEx(const char *curve,
   static CONFIDENTIAL HDNode node;
   if (fingerprint) {
     *fingerprint = 0;
-  }
-  layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL,
-                  _("testFsm_getDerivedNodeEx"), NULL,
-                  _("Next screen will show"), _("the passphrase!"), NULL,
-                  NULL);
-  if (!protectButton(ButtonRequestType_ButtonRequest_Other, false)) {
-  fsm_sendFailure(FailureType_Failure_ActionCancelled,
-                  _("u2f dismissed"));
-  layoutHome();
   }
 
   if (seed == NULL) {
