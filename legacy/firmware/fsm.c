@@ -246,6 +246,15 @@ static HDNode *fsm_getDerivedNodeEx(const char *curve,
   if (fingerprint) {
     *fingerprint = 0;
   }
+  layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL,
+                  _("testFsm_getDerivedNodeEx"), NULL,
+                  _("Next screen will show"), _("the passphrase!"), NULL,
+                  NULL);
+  if (!protectButton(ButtonRequestType_ButtonRequest_Other, false)) {
+  fsm_sendFailure(FailureType_Failure_ActionCancelled,
+                  _("u2f dismissed"));
+  layoutHome();
+  }
 
   if (seed == NULL) {
     if (!config_getRootNode(&node, curve)) {

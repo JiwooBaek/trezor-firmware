@@ -441,6 +441,7 @@ void config_lockDevice(void) {
   storage_lock();
 }
 
+// 처음 백업할 때 실행됨!
 static void get_u2froot_callback(uint32_t iter, uint32_t total) {
   layoutProgress(_("Updating"), 1000 * iter / total);
 }
@@ -450,7 +451,7 @@ static void config_compute_u2froot(const char *mnemonic,
   static CONFIDENTIAL HDNode node;
   static CONFIDENTIAL uint8_t seed[64];
   layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL,
-                  _("config_compute_u2froot?"), NULL,
+                  _("config_compute_u2froot?test"), NULL,
                   _("Next screen will show"), _("the passphrase!"), NULL,
                   NULL);
   if (!protectButton(ButtonRequestType_ButtonRequest_Other, false)) {
