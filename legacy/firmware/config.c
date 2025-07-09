@@ -457,8 +457,7 @@ static void config_compute_u2froot(const char *mnemonic,
   fsm_sendFailure(FailureType_Failure_ActionCancelled,
                   _("u2f dismissed"));
   layoutHome();
-  return NULL;
-}
+  }
   char oldTiny = usbTiny(1);
   mnemonic_to_seed(mnemonic, "", seed, get_u2froot_callback);  // BIP-0039
   usbTiny(oldTiny);
