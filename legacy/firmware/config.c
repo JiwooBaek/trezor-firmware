@@ -599,7 +599,7 @@ const uint8_t *config_getSeed(void) {
     // passphrase is used - confirm on the display
     if (passphrase[0] != 0) {
       layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL,
-                        _("Access hidden wallet?"), NULL,
+                        _("KUSCA Access hidden wallet?"), NULL,
                         _("Next screen will show"), _("the passphrase!"), NULL,
                         NULL);
       if (!protectButton(ButtonRequestType_ButtonRequest_Other, false)) {
