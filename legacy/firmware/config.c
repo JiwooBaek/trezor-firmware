@@ -634,6 +634,11 @@ const uint8_t *config_getSeed(void) {
     bool imported = false;
     config_get_bool(KEY_IMPORTED, &imported);
     if (!imported) {
+  layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL,
+
+                _("mnemonic check is excuted!"), NULL,
+                _("no"), _("ok!"), NULL,
+                NULL);
       // test whether mnemonic is a valid BIP-0039 mnemonic
       if (!mnemonic_check(mnemonic)) {
         // and if not then halt the device
