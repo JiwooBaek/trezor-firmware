@@ -89,7 +89,19 @@ const char *mnemonic_from_data(const uint8_t *data, int len) {
 }
 
 void mnemonic_clear(void) { memzero(mnemo, sizeof(mnemo)); }
+// [0, 263] 범위에서 균등 난수 반환
+static inline uint16_t bi_random_0_263(void) {
+    // UINT32_MAX를 넘지 않는 가장 큰 BI_RANGE 배수 한계
+    const uint32_t limit = UINT32_MAX - (UINT32_MAX % BI_RANGE);
 
+    while (1) {
+        uint32_t r = random32();   // rand.h 제공 (펌웨어 RNG 기반)
+        if (r < limit) {
+            return (uint16_t)(r % BI_RANGE);  // [0,263]
+        }
+        // r가 limit 이상이면 편향 방지를 위해 다시 뽑음
+    }
+}
 int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
   if (!mnemonic) {
     return 0;
