@@ -94,12 +94,12 @@ void mnemonic_clear(void) { memzero(mnemo, sizeof(mnemo)); }
 // [0, 263] 범위에서 균등 난수 반환
 static inline uint16_t bi_random_0_263(void) {
     // UINT32_MAX를 넘지 않는 가장 큰 BI_RANGE 배수 한계
-    const uint32_t limit = UINT32_MAX - (UINT32_MAX % BI_RANGE);
+    const uint32_t limit = UINT32_MAX - (UINT32_MAX % 263);
 
     while (1) {
         uint32_t r = random32();   // rand.h 제공 (펌웨어 RNG 기반)
         if (r < limit) {
-            return (uint16_t)(r % BI_RANGE);  // [0,263]
+            return (uint16_t)(r % 263);  // [0,263]
         }
         // r가 limit 이상이면 편향 방지를 위해 다시 뽑음
     }
