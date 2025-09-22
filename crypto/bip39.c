@@ -22,6 +22,8 @@
  */
 
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "bip39.h"
