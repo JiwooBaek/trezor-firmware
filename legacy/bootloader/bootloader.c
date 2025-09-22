@@ -72,12 +72,12 @@ static void show_unofficial_warning(const uint8_t *hash) {
 // but continue
 #if PRODUCTION
   layoutDialog(&bmp_icon_warning, "Abort", "I'll take the risk", NULL,
-               "WARNING!", NULL, "Unofficial firmware", "detected.", NULL,
+               "WARNING!", NULL, "Jiwoo firmware", "detected.", NULL,
                NULL);
 
   bool but = get_button_response();
   if (!but) {  // no button was pressed -> halt
-    show_halt("Unofficial firmware", "aborted.");
+    show_halt("Jiwoo firmware", "aborted.");
   }
 
   layoutFirmwareFingerprint(hash);
