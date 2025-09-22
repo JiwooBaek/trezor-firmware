@@ -1467,18 +1467,7 @@ secbool storage_change_pin(const uint8_t *oldpin, size_t oldpin_len,
     return secfalse;
   }
 
-  layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL,
-                        _("Access hidden wallet?"), NULL,
-                        _("Next screen will show"), _("the passphrase!"), NULL,
-                        NULL);
-      if (!protectButton(ButtonRequestType_ButtonRequest_Other, false)) {
-        memzero(mnemonic, sizeof(mnemonic));
-        memzero(passphrase, sizeof(passphrase));
-        fsm_sendFailure(FailureType_Failure_ActionCancelled,
-                        _("Passphrase dismissed"));
-        layoutHome();
-        return NULL;
-      }
+
   ui_progress_init(STORAGE_PIN_OP_CHANGE);
   ui_message =
       (oldpin_len != 0 && newpin_len == 0) ? VERIFYING_PIN_MSG : PROCESSING_MSG;
