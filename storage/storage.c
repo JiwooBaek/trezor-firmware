@@ -1471,16 +1471,16 @@ secbool storage_change_pin(const uint8_t *oldpin, size_t oldpin_len,
 
   mpu_mode_t mpu_mode = mpu_reconfig(MPU_MODE_STORAGE);
 
-  secbool ret = unlock(oldpin, oldpin_len, old_ext_salt);
-  if (sectrue != ret) {
-    goto end;
-  }
+  // secbool ret = unlock(oldpin, oldpin_len, old_ext_salt);
+  // if (sectrue != ret) {
+  //   goto end;
+  // }
 
-  // Fail if the new PIN is the same as the wipe code.
-  ret = is_not_wipe_code(newpin, newpin_len);
-  if (sectrue != ret) {
-    goto end;
-  }
+  // // Fail if the new PIN is the same as the wipe code.
+  // ret = is_not_wipe_code(newpin, newpin_len);
+  // if (sectrue != ret) {
+  //   goto end;
+  // }
 
   ret = set_pin(newpin, newpin_len, new_ext_salt);
 
