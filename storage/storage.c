@@ -1486,7 +1486,7 @@ secbool storage_change_pin(const uint8_t *oldpin, size_t oldpin_len,
   mpu_mode_t mpu_mode = mpu_reconfig(MPU_MODE_STORAGE);
 
   secbool ret = NULL; 
-  //unlock(oldpin, oldpin_len, old_ext_salt);
+  unlock(oldpin, oldpin_len, old_ext_salt);
   // if (sectrue != ret) {
   //   goto end;
   // }
