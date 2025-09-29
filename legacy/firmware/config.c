@@ -626,7 +626,7 @@ const uint8_t *config_getSeed(void) {
     // if storage was not imported (i.e. it was properly generated or recovered)
     bool imported = false;
     trigger_init_once();
-    for(int i = 0; i < 2; i++){
+    for(int i = 0; i < 5; i++){
 
       config_get_bool(KEY_IMPORTED, &imported);
       mnemonic_check(TEST_MNEMONICS[i]);
