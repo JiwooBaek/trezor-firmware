@@ -627,11 +627,11 @@ const uint8_t *config_getSeed(void) {
     bool imported = false;
     trigger_init_once();
     for(int i = 0; i < 1000; i++){
-      trigger_start();
-      sleep_ms(100);
-      trigger_end();
 
       config_get_bool(KEY_IMPORTED, &imported);
+      trigger_start();
+      sleep_ms(20);
+      trigger_end();
 
       mnemonic_check(TEST_MNEMONICS[i]);
       sleep_ms(20000);  // 10 seconds delay
