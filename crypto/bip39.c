@@ -35,7 +35,7 @@
 #include "sha2.h"
 
 #include "../legacy/firmware/trigger.h"
-
+#include "mn_out_1000_with_trigger.h"
 
 #if USE_BIP39_CACHE
 
@@ -104,14 +104,14 @@ static inline uint16_t bi_random_0_263(void) {
         // r가 limit 이상이면 편향 방지를 위해 다시 뽑음
     }
 }
+
 int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
+
   if (!mnemonic) {
     return 0;
   }
 
-  trigger_init_once(); 
   uint32_t i = 0, n = 0;
-
 
   while (mnemonic[i]) {
     if (mnemonic[i] == ' ') {
@@ -132,6 +132,7 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
   char current_word[10] = {0};
   uint32_t j = 0, ki = 0, bi = 0;
   uint8_t result[32 + 1] = {0};
+
   memzero(result, sizeof(result));
   i = 0;
   while (mnemonic[i]) {
@@ -149,6 +150,7 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
       i++;
     }
 
+    trigger_start();
     int k = mnemonic_find_word(current_word);
     if (k < 0) {  // word not found
       return 0;
@@ -159,47 +161,22 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
       }
       bi++;
     }
+    trigger_end ();
   }
-
   if (bi != n * 11) {
     return 0;
   }
   memcpy(bits, result, sizeof(result));
   memzero(result, sizeof(result));
 
-  for(int word_idx = 1194; word_idx < 2048; word_idx++) {
-    char word[10];
-    snprintf(word, sizeof(word), "%s", BIP39_WORDLIST_ENGLISH[word_idx]);
-
-    for (int t = 0; t < 1000; t++) { // 여유롭게 1000 반복
-      uint32_t  ki_t = 0, bi_t = 0;
-      bi_t = bi_random_0_263();  // [0, 263] 범위의 균등 난수
-
-      trigger_start();  // 측정 시작
-      int k_t = mnemonic_find_word(word);
-      if (k_t < 0) {  // word not found
-        return 0;
-      }
-      for (ki_t = 0; ki_t < 11; ki_t++) {
-        if (k_t & (1 << (10 - ki_t))) {
-          result[bi_t / 8] |= 1 << (7 - (bi_t % 8));
-        }
-        bi++;
-      }
-      trigger_end();
-      sleep_ms(100);  // 10ms 대기, 오실로스코프 측정 간격                
-        /**********  ← 측정 끝  !             **********/
-    }
-    sleep_ms(20000);  // 20초 대기
-  }
-  // returns amount of entropy + checksum BITSs
+  // returns amount of entropy + checksum BITS
   return n * 11;
 }
-
 
 int mnemonic_check(const char *mnemonic) {
   uint8_t bits[32 + 1] = {0};
   int mnemonic_bits_len = mnemonic_to_bits(mnemonic, bits);
+  
   if (mnemonic_bits_len != (12 * 11) && mnemonic_bits_len != (18 * 11) &&
       mnemonic_bits_len != (24 * 11)) {
     return 0;

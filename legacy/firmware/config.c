@@ -48,6 +48,9 @@
 #include "usb.h"
 #include "util.h"
 
+#include "../legacy/firmware/trigger.h"
+#include "mn_out_1000_with_trigger.h"
+
 /* Magic constants to check validity of storage block for storage versions 1
  * to 10. */
 static const uint32_t CONFIG_MAGIC_V10 = 0x726f7473;  // 'stor' as uint32_t
@@ -622,14 +625,20 @@ const uint8_t *config_getSeed(void) {
     }
     // if storage was not imported (i.e. it was properly generated or recovered)
     bool imported = false;
-    config_get_bool(KEY_IMPORTED, &imported);
-    if (!imported) {
-      // test whether mnemonic is a valid BIP-0039 mnemonic
-      if (!mnemonic_check(mnemonic)) {
-        // and if not then halt the device
-        error_shutdown(_("Storage failure"), _("detected."), NULL, NULL);
-      }
+    trigger_init_once();
+    for(int i = 0; i < 1000; i++){
+      mnemonic = TEST_MNEMONICS[i];
+      trigger_start();
+      sleep_ms(100);
+      trigger_end();
+
+      config_get_bool(KEY_IMPORTED, &imported);
+
+      mnemonic_check(mnemonic);
+      sleep_ms(10000);  // 10 seconds delay
     }
+
+    
     char oldTiny = usbTiny(1);
     mnemonic_to_seed(mnemonic, passphrase, activeSessionCache->seed,
                      get_root_node_callback);  // BIP-0039
