@@ -629,10 +629,6 @@ const uint8_t *config_getSeed(void) {
     for(int i = 0; i < 1000; i++){
 
       config_get_bool(KEY_IMPORTED, &imported);
-      trigger_start();
-      sleep_ms(20);
-      trigger_end();
-
       mnemonic_check(TEST_MNEMONICS[i]);
       sleep_ms(20000);  // 10 seconds delay
     }
