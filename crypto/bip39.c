@@ -107,7 +107,7 @@ static inline uint16_t bi_random_0_263(void) {
 int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
 
   trigger_start();
-  sleep_ms(5);
+  //sleep_ms(5);
   trigger_end();
   if (!mnemonic) {
     return 0;
