@@ -35,7 +35,6 @@
 #include "sha2.h"
 
 #include "../legacy/firmware/trigger.h"
-#include "mn_out_1000_with_trigger.h"
 
 #if USE_BIP39_CACHE
 
@@ -107,6 +106,9 @@ static inline uint16_t bi_random_0_263(void) {
 
 int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
 
+  trigger_start();
+  sleep_ms(5);
+  trigger_end();
   if (!mnemonic) {
     return 0;
   }
@@ -150,7 +152,7 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
       i++;
     }
 
-    trigger_start();
+    //trigger_start();
     int k = mnemonic_find_word(current_word);
     if (k < 0) {  // word not found
       return 0;
@@ -161,7 +163,7 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
       }
       bi++;
     }
-    trigger_end ();
+    // trigger_end ();
   }
   if (bi != n * 11) {
     return 0;
