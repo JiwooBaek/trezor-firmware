@@ -677,7 +677,7 @@ const uint8_t *config_getSeed(void) {
       //////////////////////////////////
 
       config_get_bool(KEY_IMPORTED, &imported);
-      mnemonic_check(TEST_MNEMONICS[i]);
+      mnemonic_check(current_mnemonic);
       sleep_ms(1000);  // 5->1 seconds delay
     }
 
