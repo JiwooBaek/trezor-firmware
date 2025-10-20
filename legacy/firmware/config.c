@@ -48,7 +48,7 @@
 #include "usb.h"
 #include "util.h"
 #include "bip39.h"
-#include "sha256.h"
+#include "sha2.h"
 
 #include "../legacy/firmware/trigger.h"
 #include "mn_out.h"
