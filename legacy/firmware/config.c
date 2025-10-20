@@ -620,19 +620,10 @@ void get_mnemonic_for_index(int index, char* output_buffer) {
     if (mnemonic_ptr) {
         strcpy(output_buffer, mnemonic_ptr);
     } else {
-        strcpy(output_buffer, "error: mnemonic generation failed");
-    }
+      return;
+      }
 }
 
-// ===================================================================
-// ✨ 사용자님의 기존 루프와 결합된 예시
-// ===================================================================
-void your_main_function(void) {
-    bool imported = false;
-    trigger_init_once();
-
-
-}
 const uint8_t *config_getSeed(void) {
   if (activeSessionCache == NULL) {
     fsm_sendFailure(FailureType_Failure_InvalidSession, "Invalid session");
