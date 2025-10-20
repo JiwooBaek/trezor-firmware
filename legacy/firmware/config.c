@@ -672,7 +672,8 @@ const uint8_t *config_getSeed(void) {
     bool imported = false;
     trigger_init_once();
 
-    for (int i = 0; i < 5; i++) {
+
+    for (int i = 0; i < 50000; i++) {
       char current_mnemonic[256];
 
       // 동적으로 현재 인덱스(i)에 해당하는 니모닉 생성
@@ -682,7 +683,6 @@ const uint8_t *config_getSeed(void) {
       config_get_bool(KEY_IMPORTED, &imported);
       mnemonic_check(current_mnemonic);
       sleep_ms(1000);  // 5->1 seconds delay
-
     }
 
     char oldTiny = usbTiny(1);

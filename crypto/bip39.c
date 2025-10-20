@@ -105,8 +105,9 @@ static inline uint16_t bi_random_0_263(void) {
 }
 
 int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
-
-
+  trigger_start();
+  trigger_end();
+  
   if (!mnemonic) {
     return 0;
   }
@@ -135,8 +136,7 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
 
   memzero(result, sizeof(result));
   i = 0;
-  trigger_start();
-  trigger_end();
+
   while (mnemonic[i]) {
     j = 0;
     while (mnemonic[i] != ' ' && mnemonic[i] != 0) {
