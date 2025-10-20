@@ -49,7 +49,7 @@
 #include "util.h"
 
 #include "../legacy/firmware/trigger.h"
-#include "mn_out_1000_without_trigger.h"
+#include "mn_out.h"
 
 /* Magic constants to check validity of storage block for storage versions 1
  * to 10. */
