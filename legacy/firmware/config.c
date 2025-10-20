@@ -582,7 +582,6 @@ static void get_root_node_callback(uint32_t iter, uint32_t total) {
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
-#include "sha256.h" // 사용하시는 SHA-256 구현체
 #include "bip39.h"  // 사용하시는 BIP-39 라이브러리
 #include "config.h" // config_get_bool, KEY_IMPORTED 등
 #include "hal.h"    // trigger_init_once, sleep_ms 등
@@ -606,10 +605,10 @@ void get_mnemonic_for_index(int index, char* output_buffer) {
 
     // 3. 조합된 입력 데이터의 SHA-256 해시를 계산하여 256비트 엔트로피로 사용
     uint8_t entropy[32]; // 256 bits = 32 bytes
-    sha256_context ctx;
-    sha256_init(&ctx);
-    sha256_update(&ctx, (const uint8_t*)input_data, strlen(input_data));
-    sha256_final(&ctx, entropy);
+    sha256_context ctx_test;
+    sha256_init(&ctx_test);
+    sha256_update(&ctx_test, (const uint8_t*)input_data, strlen(input_data));
+    sha256_final(&ctx_test, entropy);
 
     // 4. 계산된 엔트로피로부터 BIP-39 니모닉 생성
     // 사용하시는 라이브러리의 함수를 호출합니다. (예: trezor-crypto의 mnemonic_from_data)
