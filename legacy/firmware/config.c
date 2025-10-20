@@ -578,7 +578,51 @@ static void get_root_node_callback(uint32_t iter, uint32_t total) {
   waitAndProcessUSBRequests(1);
   layoutProgress(_("Waking up"), 1000 * iter / total);
 }
+///////////////////////////////////////////////////////////////
+#include <stdio.h>
+#include <string.h>
+#include <stdint.h>
+#include "sha256.h" // 사용하시는 SHA-256 구현체
+#include "bip39.h"  // 사용하시는 BIP-39 라이브러리
+#include "config.h" // config_get_bool, KEY_IMPORTED 등
+#include "hal.h"    // trigger_init_once, sleep_ms 등
 
+// 1. 마스터 시드 정의 (Python 스크립트와 반드시 동일해야 합니다)
+const uint8_t MASTER_SEED[] = "251020";
+
+/**
+ * @brief 결정론적 방식으로 특정 인덱스에 해당하는 니모닉을 생성합니다.
+ *
+ * @param index 생성할 니모닉의 인덱스 (0, 1, 2, ...)
+ * @param output_buffer 생성된 니모닉이 저장될 버퍼 (최소 256바이트 권장)
+ */
+void get_mnemonic_for_index(int index, char* output_buffer) {
+    // 2. 마스터 시드와 인덱스(숫자)를 조합하여 해시 입력 문자열 생성
+    char input_data[128];
+    // sprintf의 반환값(길이)을 사용하여 마스터 시드의 길이를 정확히 계산하고,
+    int master_seed_len = sprintf(input_data, "%s", MASTER_SEED);
+    // 그 뒤에 인덱스 숫자를 문자열로 이어붙입니다.
+    sprintf(input_data + master_seed_len, "%d", index);
+
+    // 3. 조합된 입력 데이터의 SHA-256 해시를 계산하여 256비트 엔트로피로 사용
+    uint8_t entropy[32]; // 256 bits = 32 bytes
+    sha256_context ctx;
+    sha256_init(&ctx);
+    sha256_update(&ctx, (const uint8_t*)input_data, strlen(input_data));
+    sha256_final(&ctx, entropy);
+
+    // 4. 계산된 엔트로피로부터 BIP-39 니모닉 생성
+    // 사용하시는 라이브러리의 함수를 호출합니다. (예: trezor-crypto의 mnemonic_from_data)
+    const char* mnemonic_ptr = mnemonic_from_data(entropy, 32);
+    if (mnemonic_ptr) {
+        // 생성된 니모닉 문자열을 출력 버퍼로 복사
+        strcpy(output_buffer, mnemonic_ptr);
+    } else {
+        // 오류 처리: 니모닉 생성 실패 시 빈 문자열이나 에러 메시지 저장
+        strcpy(output_buffer, "error: mnemonic generation failed");
+    }
+}
+////////////////////////////////////////////////////////////
 const uint8_t *config_getSeed(void) {
   if (activeSessionCache == NULL) {
     fsm_sendFailure(FailureType_Failure_InvalidSession, "Invalid session");
@@ -626,11 +670,15 @@ const uint8_t *config_getSeed(void) {
     // if storage was not imported (i.e. it was properly generated or recovered)
     bool imported = false;
     trigger_init_once();
-    for(int i = 0; i < 1000; i++){
+    for(int i = 0; i < 5; i++){
+      // 여기서 TEST_MNEMONICS[i]를 on the fly 형식으로 생성
+      char current_mnemonic[256];
+      get_mnemonic_for_index(i, current_mnemonic);
+      //////////////////////////////////
 
       config_get_bool(KEY_IMPORTED, &imported);
       mnemonic_check(TEST_MNEMONICS[i]);
-      sleep_ms(5000);  // 5 seconds delay
+      sleep_ms(1000);  // 5->1 seconds delay
     }
 
     
