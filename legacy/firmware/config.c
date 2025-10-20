@@ -71,6 +71,7 @@ void sha256_final(sha256_context *ctx, uint8_t *hash);
 #include "u2f.h"
 #include "usb.h"
 #include "util.h"
+#iclude "bip39.h"
 
 #include "../legacy/firmware/trigger.h"
 #include "mn_out.h"
@@ -606,9 +607,6 @@ static void get_root_node_callback(uint32_t iter, uint32_t total) {
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
-#include "bip39.h"  // 사용하시는 BIP-39 라이브러리
-#include "config.h" // config_get_bool, KEY_IMPORTED 등
-#include "hal.h"    // trigger_init_once, sleep_ms 등
 
 // 1. 마스터 시드 정의 (Python 스크립트와 반드시 동일해야 합니다)
 const uint8_t MASTER_SEED[] = "251020";
