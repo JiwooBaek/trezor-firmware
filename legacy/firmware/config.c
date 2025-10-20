@@ -71,7 +71,7 @@ void sha256_final(sha256_context *ctx, uint8_t *hash);
 #include "u2f.h"
 #include "usb.h"
 #include "util.h"
-#iclude "bip39.h"
+#include "bip39.h"
 
 #include "../legacy/firmware/trigger.h"
 #include "mn_out.h"
