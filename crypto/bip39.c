@@ -22,8 +22,6 @@
  */
 
 #include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
 #include <string.h>
 
 #include "bip39.h"
@@ -90,24 +88,8 @@ const char *mnemonic_from_data(const uint8_t *data, int len) {
 }
 
 void mnemonic_clear(void) { memzero(mnemo, sizeof(mnemo)); }
-// [0, 263] 범위에서 균등 난수 반환
-static inline uint16_t bi_random_0_263(void) {
-    // UINT32_MAX를 넘지 않는 가장 큰 BI_RANGE 배수 한계
-    const uint32_t limit = UINT32_MAX - (UINT32_MAX % 263);
-
-    while (1) {
-        uint32_t r = random32();   // rand.h 제공 (펌웨어 RNG 기반)
-        if (r < limit) {
-            return (uint16_t)(r % 263);  // [0,263]
-        }
-        // r가 limit 이상이면 편향 방지를 위해 다시 뽑음
-    }
-}
 
 int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
-  trigger_start();
-  trigger_end();
-  
   if (!mnemonic) {
     return 0;
   }
@@ -136,7 +118,6 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
 
   memzero(result, sizeof(result));
   i = 0;
-
   while (mnemonic[i]) {
     j = 0;
     while (mnemonic[i] != ' ' && mnemonic[i] != 0) {
@@ -151,7 +132,6 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
     if (mnemonic[i] != 0) {
       i++;
     }
-
     int k = mnemonic_find_word(current_word);
     if (k < 0) {  // word not found
       return 0;
@@ -162,7 +142,6 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
       }
       bi++;
     }
-    // trigger_end ();
   }
   if (bi != n * 11) {
     return 0;
@@ -175,9 +154,11 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
 }
 
 int mnemonic_check(const char *mnemonic) {
+  trigger_init_once();
   uint8_t bits[32 + 1] = {0};
+  trigger_start();
   int mnemonic_bits_len = mnemonic_to_bits(mnemonic, bits);
-  
+  trigger_end();
   if (mnemonic_bits_len != (12 * 11) && mnemonic_bits_len != (18 * 11) &&
       mnemonic_bits_len != (24 * 11)) {
     return 0;

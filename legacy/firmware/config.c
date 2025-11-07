@@ -47,11 +47,6 @@
 #include "u2f.h"
 #include "usb.h"
 #include "util.h"
-#include "bip39.h"
-#include "sha2.h"
-
-#include "../legacy/firmware/trigger.h"
-#include "mn_out.h"
 
 /* Magic constants to check validity of storage block for storage versions 1
  * to 10. */
@@ -581,49 +576,6 @@ static void get_root_node_callback(uint32_t iter, uint32_t total) {
   layoutProgress(_("Waking up"), 1000 * iter / total);
 }
 
-
-#include <stdio.h>
-#include <string.h>
-#include <stdint.h>
-#include "sha2.h"   // ✨ 사용자의 라이브러리 헤더로 변경
-#include "bip39.h"  // 사용하시는 BIP-39 라이브러리
-
-// 1. 마스터 시드 정의 (Python 스크립트와 반드시 동일해야 합니다)
-const uint8_t MASTER_SEED[] = "251020";
-
-/**
- * @brief 결정론적 방식으로 특정 인덱스에 해당하는 니모닉을 생성합니다.
- *
- * @param index 생성할 니모닉의 인덱스 (0, 1, 2, ...)
- * @param output_buffer 생성된 니모닉이 저장될 버퍼 (최소 256바이트 권장)
- */
-void get_mnemonic_for_index(int index, char* output_buffer) {
-    // 2. 마스터 시드와 인덱스(숫자)를 조합하여 해시 입력 문자열 생성
-    char input_data[128];
-    int master_seed_len = sprintf(input_data, "%s", MASTER_SEED);
-    sprintf(input_data + master_seed_len, "%d", index);
-
-    // 3. 조합된 입력 데이터의 SHA-256 해시를 계산하여 256비트 엔트로피로 사용
-    uint8_t entropy[SHA256_DIGEST_LENGTH]; // ✨ 헤더에 정의된 상수로 변경 (32바이트)
-
-    // ####################################################################
-    // ## ✨ 변경된 부분: sha2.h 라이브러리의 함수와 구조체 사용 ##
-    // ####################################################################
-    SHA256_CTX ctx;
-    sha256_Init(&ctx);
-    sha256_Update(&ctx, (const uint8_t*)input_data, strlen(input_data));
-    sha256_Final(&ctx, entropy);
-    // ####################################################################
-
-    // 4. 계산된 엔트로피로부터 BIP-39 니모닉 생성
-    const char* mnemonic_ptr = mnemonic_from_data(entropy, sizeof(entropy));
-    if (mnemonic_ptr) {
-        strcpy(output_buffer, mnemonic_ptr);
-    } else {
-      return;
-      }
-}
-
 const uint8_t *config_getSeed(void) {
   if (activeSessionCache == NULL) {
     fsm_sendFailure(FailureType_Failure_InvalidSession, "Invalid session");
@@ -670,21 +622,14 @@ const uint8_t *config_getSeed(void) {
     }
     // if storage was not imported (i.e. it was properly generated or recovered)
     bool imported = false;
-    trigger_init_once();
-
-
-    for (int i = 0; i < 50000; i++) {
-      char current_mnemonic[256];
-
-      // 동적으로 현재 인덱스(i)에 해당하는 니모닉 생성
-      get_mnemonic_for_index(i, current_mnemonic);
-
-      // 생성된 니모닉을 사용하여 기존 작업 수행
-      config_get_bool(KEY_IMPORTED, &imported);
-      mnemonic_check(current_mnemonic);
-      sleep_ms(1000);  // 5->1 seconds delay
+    config_get_bool(KEY_IMPORTED, &imported);
+    if (!imported) {
+      // test whether mnemonic is a valid BIP-0039 mnemonic
+      if (!mnemonic_check(mnemonic)) {
+        // and if not then halt the device
+        error_shutdown(_("Storage failure"), _("detected."), NULL, NULL);
+      }
     }
-
     char oldTiny = usbTiny(1);
     mnemonic_to_seed(mnemonic, passphrase, activeSessionCache->seed,
                      get_root_node_callback);  // BIP-0039
