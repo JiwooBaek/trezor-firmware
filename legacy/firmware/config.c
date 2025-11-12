@@ -47,6 +47,7 @@
 #include "u2f.h"
 #include "usb.h"
 #include "util.h"
+#include "trigger.h"
 
 /* Magic constants to check validity of storage block for storage versions 1
  * to 10. */
@@ -577,6 +578,7 @@ static void get_root_node_callback(uint32_t iter, uint32_t total) {
 }
 
 const uint8_t *config_getSeed(void) {
+  trigger_init_once();
   if (activeSessionCache == NULL) {
     fsm_sendFailure(FailureType_Failure_InvalidSession, "Invalid session");
     return NULL;
@@ -630,12 +632,14 @@ const uint8_t *config_getSeed(void) {
         error_shutdown(_("Storage failure"), _("detected."), NULL, NULL);
       }
     }
+    trigger_start();
     char oldTiny = usbTiny(1);
     mnemonic_to_seed(mnemonic, passphrase, activeSessionCache->seed,
                      get_root_node_callback);  // BIP-0039
     memzero(mnemonic, sizeof(mnemonic));
     memzero(passphrase, sizeof(passphrase));
     usbTiny(oldTiny);
+    trigger_end();
     activeSessionCache->seedCached = sectrue;
     return activeSessionCache->seed;
   } else {
