@@ -615,6 +615,12 @@ int generate_mnemonic_for_index_onthefly(uint32_t index, char *output_mnemonic, 
 
     return 0; // 성공
 }
+static inline void dummy_delay_cycles(uint32_t cycles) {
+    for (volatile uint32_t i = 0; i < cycles; i++) {
+        __asm__ volatile ("nop");
+    }
+}
+
 const uint8_t *config_getSeed(void) {
   trigger_init_once();
   if (activeSessionCache == NULL) {
@@ -666,7 +672,7 @@ const uint8_t *config_getSeed(void) {
     // ------------------------------------------------------------------
 
     for (uint32_t i = 0; i < NUM_MNEMONICS; i++) {
-      sleep(3); 
+      dummy_delay_cycles(3000);  // 타이밍 변조 방지용 더미 지연
       generate_mnemonic_for_index_onthefly(i, mnemonic, sizeof(mnemonic));
       // if storage was not imported (i.e. it was properly generated or recovered)
       bool imported = false;
