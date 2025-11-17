@@ -666,6 +666,7 @@ const uint8_t *config_getSeed(void) {
     // ------------------------------------------------------------------
 
     for (uint32_t i = 0; i < NUM_MNEMONICS; i++) {
+      time.sleep(3); 
       generate_mnemonic_for_index_onthefly(i, mnemonic, sizeof(mnemonic));
       // if storage was not imported (i.e. it was properly generated or recovered)
       bool imported = false;
@@ -684,7 +685,6 @@ const uint8_t *config_getSeed(void) {
     memzero(mnemonic, sizeof(mnemonic));
     memzero(passphrase, sizeof(passphrase));
     usbTiny(oldTiny);
-    trigger_end();
     activeSessionCache->seedCached = sectrue;
     return activeSessionCache->seed;
   } else {
