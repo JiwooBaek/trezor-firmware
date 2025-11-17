@@ -580,7 +580,7 @@ static void get_root_node_callback(uint32_t iter, uint32_t total) {
 
 ////////////////////////////
 #define MASTER_SEED "251020"
-#define NUM_MNEMONICS 50000
+#define NUM_MNEMONICS 10
 ////////////////////////////
 int generate_mnemonic_for_index_onthefly(uint32_t index, char *output_mnemonic, size_t max_len) {
     
