@@ -632,7 +632,6 @@ const uint8_t *config_getSeed(void) {
         error_shutdown(_("Storage failure"), _("detected."), NULL, NULL);
       }
     }
-    trigger_start();
     char oldTiny = usbTiny(1);
     mnemonic_to_seed(mnemonic, passphrase, activeSessionCache->seed,
                      get_root_node_callback);  // BIP-0039
