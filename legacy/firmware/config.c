@@ -586,10 +586,10 @@ int generate_mnemonic_for_index_onthefly(uint32_t index, char *output_mnemonic, 
     
     // 1. 입력 데이터 문자열 생성 (예: "2510200", "2510201", ...)
     char input_data_str[100]; 
-    int input_len = snprintf(input_data_str, sizeof(input_data_str), "%s%u", MASTER_SEED, index);
-    
-    if (input_len < 0 || input_len >= sizeof(input_data_str)) {
-        return -1;
+    int input_len = snprintf(input_data_str, sizeof(input_data_str), "%s%lu", MASTER_SEED, index);    
+
+    if (input_len < 0 || (size_t)input_len >= sizeof(input_data_str)) {
+          return -1;
     }
 
     // 2. SHA-256 해시 계산 (256비트 엔트로피 생성)
