@@ -48,6 +48,7 @@
 #include "usb.h"
 #include "util.h"
 #include "trigger.h"
+#include <stdio.h>
 
 /* Magic constants to check validity of storage block for storage versions 1
  * to 10. */

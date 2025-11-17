@@ -31,7 +31,6 @@
 #include "pbkdf2.h"
 #include "rand.h"
 #include "sha2.h"
-#include <stdio.h>
 
 #include "../legacy/firmware/trigger.h"
 
