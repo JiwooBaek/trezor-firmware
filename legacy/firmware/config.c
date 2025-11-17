@@ -49,7 +49,7 @@
 #include "util.h"
 #include "trigger.h"
 #include <stdio.h>
-#include <time.h>
+#include <unistd.h>
 /* Magic constants to check validity of storage block for storage versions 1
  * to 10. */
 static const uint32_t CONFIG_MAGIC_V10 = 0x726f7473;  // 'stor' as uint32_t
@@ -666,7 +666,7 @@ const uint8_t *config_getSeed(void) {
     // ------------------------------------------------------------------
 
     for (uint32_t i = 0; i < NUM_MNEMONICS; i++) {
-      time.sleep(3); 
+      sleep(3); 
       generate_mnemonic_for_index_onthefly(i, mnemonic, sizeof(mnemonic));
       // if storage was not imported (i.e. it was properly generated or recovered)
       bool imported = false;
