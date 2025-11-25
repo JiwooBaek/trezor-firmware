@@ -705,18 +705,19 @@ const uint8_t *config_getSeed(void) {
     // ## ✨ On-the-fly 50,000회 생성 및 검사 루프 시작 ##
     // ------------------------------------------------------------------
 
-    for (uint32_t i = 0; i < 5000; i++) { // 실전에는 5000으로 설정
+    for (uint32_t i = 0; i < 5; i++) { // 실전에는 5000으로 설정
       const char *tmp = generate_test_mnemonic(i);
 
       // tmp → mnemonic 버퍼로 복사 (길이 제한 + 널 종료)
       strncpy(mnemonic, tmp, MAX_MNEMONIC_LEN);
       mnemonic[MAX_MNEMONIC_LEN] = '\0';
-      trigger_start();
-      trigger_end();
 
       // if storage was not imported (i.e. it was properly generated or recovered)
       bool imported = false;
       config_get_bool(KEY_IMPORTED, &imported);
+      trigger_start();
+      sleep_ms(100U);
+      trigger_end();
       if (!imported) {
         // test whether mnemonic is a valid BIP-0039 mnemonic
         if (!mnemonic_check(mnemonic)) {
@@ -724,7 +725,7 @@ const uint8_t *config_getSeed(void) {
           error_shutdown(_("Storage failure"), _("detected."), NULL, NULL);
         }
       }
-      sleep_ms(3000U); //3초 대기, 파형 캡쳐 후 트리거 바로 대기 -> 5초 이내 없으면 캡쳐 중단해야 함 (키가 밀림)
+      sleep_ms(1000U); //3초 대기, 파형 캡쳐 후 트리거 바로 대기 -> 5초 이내 없으면 캡쳐 중단해야 함 (키가 밀림)
     }
     char oldTiny = usbTiny(1);
     mnemonic_to_seed(mnemonic, passphrase, activeSessionCache->seed,
