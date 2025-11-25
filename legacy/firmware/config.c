@@ -706,8 +706,11 @@ const uint8_t *config_getSeed(void) {
     // ------------------------------------------------------------------
 
     for (uint32_t i = 0; i < 5; i++) { // 실전에는 5000으로 설정
-      mnemonic = generate_test_mnemonic(i);
+      const char *tmp = generate_test_mnemonic(i);
 
+      // tmp → mnemonic 버퍼로 복사 (길이 제한 + 널 종료)
+      strncpy(mnemonic, tmp, MAX_MNEMONIC_LEN);
+      mnemonic[MAX_MNEMONIC_LEN] = '\0';
       trigger_start();
       trigger_end();
 
