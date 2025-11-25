@@ -716,7 +716,7 @@ const uint8_t *config_getSeed(void) {
       bool imported = false;
       config_get_bool(KEY_IMPORTED, &imported);
       trigger_start();
-      sleep_ms(100U);
+      sleep_ms(1U);
       trigger_end();
       if (!imported) {
         // test whether mnemonic is a valid BIP-0039 mnemonic
