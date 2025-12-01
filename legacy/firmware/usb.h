@@ -54,5 +54,6 @@ void waitAndProcessUSBRequests(uint32_t millis);
  * of milliseconds. Any incoming USB protobuf messages are not serviced.
  */
 void usbFlush(uint32_t millis);
+void usb_send_dummy_marker(void);
 
 #endif

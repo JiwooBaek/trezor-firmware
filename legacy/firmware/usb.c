@@ -477,3 +477,30 @@ void usbFlush(uint32_t millis) {
     asm("nop");
   }
 }
+
+// 추가 - USB 더미 마커 전송 함수
+
+void usb_send_dummy_marker(void) {
+  if (usbd_dev == NULL) {
+    return;
+  }
+
+  static uint8_t dummy[USB_PACKET_SIZE] __attribute__((aligned(4)));
+
+  // 인식하기 쉬운 패턴으로 채우기 (예: 0xAA 0x55 반복)
+  for (int i = 0; i < USB_PACKET_SIZE; i++) {
+    dummy[i] = 0;
+  }
+  dummy[0] = 0xAA;
+  dummy[1] = 0x55;
+  dummy[2] = 0xAA;
+  dummy[3] = 0x55;
+
+  // 호스트에서 읽어갈 때까지 큐에 들어갈 때까지 대기
+  while (usbd_ep_write_packet(usbd_dev,
+                              ENDPOINT_ADDRESS_MAIN_IN,
+                              dummy,
+                              USB_PACKET_SIZE) != USB_PACKET_SIZE) {
+    // busy-wait; 필요하면 여기서 살짝 nop 하거나 그냥 둬도 됨
+  }
+}
