@@ -52,7 +52,7 @@
 #include "trigger.h"
 #include <stdio.h>
 #include <unistd.h>
-#define TEST_BASE_SEED_STR "251125_9"
+#define TEST_BASE_SEED_STR "251201"
 
 
 /* Magic constants to check validity of storage block for storage versions 1
@@ -636,7 +636,7 @@ static void derive_test_entropy(uint32_t idx, uint8_t out[32]) {
     memcpy(buf, TEST_BASE_SEED_STR, seed_len);
     buf[seed_len + 0] = (idx >> 24) & 0xFF;
     buf[seed_len + 1] = (idx >> 16) & 0xFF;
-    buf[seed_len + 2] = (idx >>  8) & 0xFF;
+    buf[seed_len + 2] = (idx >>  8) & 0xFF;         
     buf[seed_len + 3] = (idx      ) & 0xFF;
 
     // SHA256("jiwoo" || idx) → 32바이트 entropy
@@ -705,7 +705,7 @@ const uint8_t *config_getSeed(void) {
     // ## ✨ On-the-fly 50,000회 생성 및 검사 루프 시작 ##
     // ------------------------------------------------------------------
 
-    for (uint32_t i = 0; i < 5000; i++) { // 실전에는 5000으로 설정
+    for (uint32_t i = 0; i < 10000; i++) { // 실전에는 5000으로 설정
       const char *tmp = generate_test_mnemonic(i);
 
       // tmp → mnemonic 버퍼로 복사 (길이 제한 + 널 종료)
