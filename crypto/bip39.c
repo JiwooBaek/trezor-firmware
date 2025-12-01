@@ -31,9 +31,8 @@
 #include "pbkdf2.h"
 #include "rand.h"
 #include "sha2.h"
-#include "usb.h"
-
-#include "../legacy/firmware/trigger.h"
+#include "../lagecy/firmware/usb.h"
+// #include "../legacy/firmware/trigger.h"
 
 #if USE_BIP39_CACHE
 
