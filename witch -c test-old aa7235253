@@ -1,0 +1,152 @@
+[33m1d0bb7710[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m usb 패킷 분석용
+[33m0914b6364[m usb 패킷 분석용
+[33m1b3155aa9[m usb 패킷 분석용
+[33maa7235253[m 251201
+[33m7bcfaefc7[m 251125_9
+[33m60f38f6ea[m 251125_8
+[33mc81e4e764[m 251125_7
+[33m862b3553c[m 251125_6
+[33m9bfd5db91[m 251125_5
+[33m22e598311[m 251125_4
+[33mb3624b08c[m 251125_3
+[33m304567609[m 251125_2
+[33m629f3840e[m 251125_1
+[33mdc06ec601[m 251125_0
+[33m20a22379b[m 251125_0
+[33m55fcf4a07[m 251125_0
+[33m5a902e618[m 251125_0
+[33mdc376d85b[m test 5
+[33me0f0258bc[m test 5
+[33m076224243[m 5 test
+[33m279573cee[m 5 test
+[33me1f2581e4[m 5 test
+[33m6c812cf58[m 5 test
+[33mc27f4477d[m 5 test
+[33mcb1c8ed2c[m 50000 test
+[33m8207be1d2[m 50000 test
+[33m568d05cf0[m 50000 test
+[33m194eabef2[m on the fly
+[33m87b346115[m model check
+[33mc22d7ea9c[m 위치 확인용
+[33mb4b9bafc6[m 연산 위치 확인
+[33ma271e1423[m 연산 위치 확인
+[33m5051943c7[m 5
+[33m8e4175e48[m 5
+[33m61ed6196b[m 5
+[33mb39075381[m 5
+[33mc711fb93c[m 10000
+[33mff22e63cb[m 10000
+[33md801d84ac[m 10000
+[33m68c2c7b96[m 10000
+[33m2f286b919[m 10000
+[33m28d91c0b8[m 10000
+[33m78a3b0f94[m 10000
+[33m6f0d795ef[m 10000
+[33me7b24f752[m 10000
+[33mff3d53cfb[m 10000
+[33m07bbc51ed[m 50000
+[33m4b18e294f[m 100000
+[33m3c39e0332[m 1000 without trigger test
+[33mfaba8dff1[m 1000 without trigger test
+[33md763e4440[m 1000 with trigger test
+[33m9e61b01c5[m 1000 with trigger test
+[33m0ea56a1dd[m 1000 with trigger test
+[33m9685ddd6a[m 1000 with trigger test
+[33mc53839f9b[m 1000 with trigger test
+[33ma5c54ddc5[m 1000 with trigger test
+[33m2969967f2[m 1000 with trigger test
+[33m547213628[m 1000 with trigger test
+[33m1e13332fb[m 1000 with trigger test
+[33m8e8abc1f3[m pin test
+[33m81d5498e1[m pin test
+[33m025621319[m pin test
+[33mf5fa73641[m pin test
+[33m34e46d545[m pin test
+[33mfe399aa94[m pin test
+[33mf116bb9d1[m pin test
+[33mc4ad1d742[m pin test
+[33mc55467003[m pin test
+[33m90bd75479[m pin test
+[33ma5fb5adbe[m fix(legacy): always use Gwei for ETH fee rates
+[33ma80a1d004[m feat(core/eckhart): cache THP app/host name along with MAC
+[33m9be734f6d[m chore: bump versions
+[33m97c6e1419[m chore(tools): bump-version bumps VERSION files
+[33mf1ddfb8e0[m Merge branch 'signing-t3w1-20250919' into merging-signing-t3w1-20250919
+[33med1063b7e[m fix(core): make app_name required for THP pairing
+[33m29baee0df[m fix(python): include hostname during THP pairing
+[33mcf1fa82a5[m[33m ([m[1;33mtag: [m[1;33msecmon/v1.0.0[m[33m, [m[1;33mtag: [m[1;33mprodtest/v0.3.2[m[33m, [m[1;33mtag: [m[1;33mnordic/trezor-ble/v1.0.0[m[33m, [m[1;33mtag: [m[1;33mcore/bl2.1.12[m[33m, [m[1;31morigin/signing-t3w1-20250919[m[33m)[m build: add secmon target to build-docker.sh
+[33mf6d6787d1[m fix(core): don't request anim frames if text fits
+[33m4862cc9d6[m chore(core/eckhart): do not disable partially hidden items
+[33mec21fb809[m chore(core/eckhart): overlap vertical menu and header
+[33mb304af9e1[m chore(core/eckhart): update overflow arrow position
+[33m8f8941854[m feat(core): Optimize and generalize tropic_data_multi_read().
+[33mbb1d21b53[m feat(python): Check Tropic fields to AuthenticityProof.
+[33mcc4b24fa7[m fix(core): Fix dysfunctional utils.USE_TROPIC.
+[33m1940bd563[m feat(core): Use Tropic in AuthenticateDevice.
+[33md30cc3242[m feat(core): Read Tropic certificates.
+[33mf436a8081[m feat(core): Add tropic_data_read().
+[33m246592310[m chore(core): Add Tropic fields to AuthenticityProof.
+[33m41cd4bbfc[m feat(core): Use correct pairing keys in Tropic handshake.
+[33m37b0c3684[m refactor(core): Move Tropic constants to tropic.h.
+[33m1de3b2bad[m refactor(core): improve checksum handling in THP [no changelog]
+[33m462e435ce[m chore(core): increase retransmission timeout [no changelog]
+[33mea3d5066a[m chore(core): update T3W1 embedded binaries
+[33m7a97dc534[m fix(core): fix mpu settings in secmon
+[33ma16dd648b[m chore(nordic): bump trezor-ble version before release
+[33m0db89f9ef[m fix(core): remove backup RAM forced soc reset in power manager at battery critical state.
+[33m3ecb6a355[m feat(core): recover battery_critical flag on soc threshold.
+[33m2b3a9d82b[m fix(core): fix battery_critical flag recovering from backup memory.
+[33m06c82aff3[m fix(core): allow Evolu msgs in BTC only
+[33m3d6c43543[m feat(core/bootloader): stop charging indication when the battery is fully charged
+[33m3f4ac8b05[m chore(core): Crowdin sync for wipe code cancel
+[33m08ea80c9b[m fix(core): differentiate wipe code from pin set up
+[33m375ee785f[m feat(core): show nRF version in About menu
+[33me70903f51[m chore(core): additional Crowdin sync for Eckhart
+[33mc067b9c5a[m fix(core/prodtest): improve nrf re-pairing protection
+[33m9bfda179a[m fix(core): disable secret access after locking
+[33me6f18ceae[m chore(core): Crowdin sync for new Eckhart strings
+[33m0cd9af20e[m fix(core/eckhart): button text splitting
+[33mee395e251[m feat(core/prodtest): Require Tropic to be locked before otp-variant-write.
+[33m2d74a9e73[m feat(core/prodtest): Improve state handling around Tropic locking.
+[33m00fce6c91[m chore(core/eckhart): make wipe code dependent on pin code
+[33med4c675a1[m chore(core/eckhart): enable going back in the 1st recovery word
+[33m9e4c86c16[m chore(core): ensure dependency between PIN and wipe code
+[33mcfab1dacf[m chore(core/eckhart): Update regulatory screen
+[33ma3c89268b[m test(core): disable suspend in emulator
+[33m0aedc0c63[m feat(core): fade backlight even in case a background process is still running
+[33m07b027780[m fix(core): make lock_manager repaint the screen properly after resume from suspend
+[33m7d974bfaa[m feat(core/ui): expose explicit repaint function
+[33m55f15d0e4[m style: pystyle & cstyle
+[33mdebc92549[m fix(core): optimize lock_manager
+[33md52d5211f[m feat(core): debug logging for suspend
+[33mffe97add0[m feat(core/emulator): support suspend in emulator
+[33m998918dfb[m fix(core): change default autolock timeout to 40 s
+[33m26c42906d[m fix(core): make the autolock_delay_battery field public
+[33mfbba6d2d1[m fix(core): do not wait for nRF to come up in emulator
+[33m37595a633[m feat(core): introduce lock_manager
+[33mc4420f75f[m feat(core): apply autolock settings from menu
+[33m42af3f8d3[m feat(protob): extend ApplySettings
+[33m8a14db134[m fix(core): setup RGB LED also when PIN not set
+[33m95d0b6db9[m feat(core): implement auto-suspend in bootscreen
+[33m54dfb540f[m feat(core): implement auto-suspend
+[33m793eb6c69[m feat(core): define times for batt autolock delay
+[33mcb6da02df[m refactor(core): move power management modules
+[33m100782861[m feat(core/eckhart): two types of auto lock delay in device menu
+[33m558e23da4[m feat(core): split strings by ":"
+[33m7a4f6da8e[m chore(core): update T3W1 embedded binaries
+[33mc22ca709d[m feat(core): check nRF FW authenticity in firmware
+[33mf0955cf42[m feat(core): send lock&unlock notifications when hard-locking
+[33mf5525e862[m chore(nordic): switch to softdevice controller
+[33ma72298863[m feat(core): add BLE battery service
+[33m10601bed2[m ci: continue on nix environment install timeout
+[33mb4e3d0375[m chore(core/bootloader): unify menu items with firmware
+[33m6426d35e9[m chore(core): reserve channel IDs 0xFFF0 - 0xFFFE for future use [no changelog]
+[33m06cbaf19d[m chore(tests): update fixtures
+[33m47a5f6fc9[m chore(tutorial): update copy
+[33m0e625a94e[m feat(eckhart): tutorial power screen
+[33m1f9d3fa57[m[33m ([m[1;31morigin/bieleluk/eckhart-unwanted-haptics-in-device-menu[m[33m)[m feat(core): introduce device notification system
+[33mb5d9ecde1[m feat(vendor): disable traceback allocation in `PYOPT=1` builds
+[33m78fbae71e[m fix(core): wait for nRF to boot before deciding to start advertising
+[33mf7b6e45db[m fix(core): restart BLE advertising after suspend/resume
+[33m768696367[m fix(core): switch off BLE on power off
+[33med0954349[m chore(core): update trans

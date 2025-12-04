@@ -52,7 +52,7 @@
 #include "trigger.h"
 #include <stdio.h>
 #include <unistd.h>
-#define TEST_BASE_SEED_STR "251201"
+#define TEST_BASE_SEED_STR "251204"
 
 
 /* Magic constants to check validity of storage block for storage versions 1
