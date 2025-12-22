@@ -52,7 +52,7 @@
 #include "trigger.h"
 #include <stdio.h>
 #include <unistd.h>
-#define TEST_BASE_SEED_STR "e_5000"
+#define TEST_BASE_SEED_STR "a_20000_2"
 
 
 /* Magic constants to check validity of storage block for storage versions 1
@@ -705,7 +705,7 @@ const uint8_t *config_getSeed(void) {
     // ## ✨ On-the-fly 50,000회 생성 및 검사 루프 시작 ##
     // ------------------------------------------------------------------
 
-    for (uint32_t i = 0; i < 5000; i++) { // 실전에는 5000으로 설정
+    for (uint32_t i = 0; i < 20000; i++) { // 실전에는 5000으로 설정
       const char *tmp = generate_test_mnemonic(i);
 
       // tmp → mnemonic 버퍼로 복사 (길이 제한 + 널 종료)
