@@ -32,7 +32,8 @@
 #include "rand.h"
 #include "sha2.h"
 
-#include "../legacy/firmware/trigger.h"
+#include "trigger.h"
+
 
 #if USE_BIP39_CACHE
 
@@ -94,6 +95,8 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
     return 0;
   }
 
+
+  trigger_start();
   uint32_t i = 0, n = 0;
 
   while (mnemonic[i]) {
@@ -149,13 +152,13 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
   memcpy(bits, result, sizeof(result));
   memzero(result, sizeof(result));
 
+  trigger_end();
   // returns amount of entropy + checksum BITS
   return n * 11;
 }
 
 int mnemonic_check(const char *mnemonic) {
   uint8_t bits[32 + 1] = {0};
-
   int mnemonic_bits_len = mnemonic_to_bits(mnemonic, bits);
   if (mnemonic_bits_len != (12 * 11) && mnemonic_bits_len != (18 * 11) &&
       mnemonic_bits_len != (24 * 11)) {

@@ -48,13 +48,6 @@
 #include "usb.h"
 #include "util.h"
 
-
-#include "trigger.h"
-#include <stdio.h>
-#include <unistd.h>
-#define TEST_BASE_SEED_STR "e_20000"
-
-
 /* Magic constants to check validity of storage block for storage versions 1
  * to 10. */
 static const uint32_t CONFIG_MAGIC_V10 = 0x726f7473;  // 'stor' as uint32_t
@@ -583,80 +576,7 @@ static void get_root_node_callback(uint32_t iter, uint32_t total) {
   layoutProgress(_("Waking up"), 1000 * iter / total);
 }
 
-// ////////////////////////////
-// #define MASTER_SEED "251020"
-// #define NUM_MNEMONICS 10
-// ////////////////////////////
-// int generate_mnemonic_for_index_onthefly(uint32_t index, char *output_mnemonic, size_t max_len) {
-    
-//     // 1. 입력 데이터 문자열 생성 (예: "2510200", "2510201", ...)
-//     char input_data_str[100]; 
-//     int input_len = snprintf(input_data_str, sizeof(input_data_str), "%s%lu", MASTER_SEED, index);    
-
-//     if (input_len < 0 || (size_t)input_len >= sizeof(input_data_str)) {
-//           return -1;
-//     }
-
-//     // 2. SHA-256 해시 계산 (256비트 엔트로피 생성)
-//     //    (sha2.h에 정의된 sha256_Raw 사용)
-//     uint8_t entropy[SHA256_DIGEST_LENGTH]; // 32 bytes
-//     sha256_Raw((const uint8_t *)input_data_str, input_len, entropy);
-
-//     // 3. 엔트로피로부터 니모닉 생성
-//     //    (펌웨어의 bip39.h에 있는 함수 사용 - mnemonic_from_data로 가정)
-//     const char *mnemonic_ptr = mnemonic_from_data(entropy, sizeof(entropy));
-
-//     if (mnemonic_ptr == NULL) {
-//         memzero(entropy, sizeof(entropy));
-//         return -1;
-//     }
-
-//     // 4. 결과 복사 및 정리
-//     strncpy(output_mnemonic, mnemonic_ptr, max_len - 1);
-//     output_mnemonic[max_len - 1] = '\0'; // NUL-종료 보장
-
-//     memzero(entropy, sizeof(entropy));
-//     memzero(input_data_str, sizeof(input_data_str));
-
-//     return 0; // 성공
-// }
-
-// idx → 32바이트 entropy (ENT=256bit)
-static void derive_test_entropy(uint32_t idx, uint8_t out[32]) {
-    uint8_t buf[64];  // "jiwoo"(5바이트) + idx(4바이트) 정도면 충분히 넉넉
-    size_t seed_len = strlen(TEST_BASE_SEED_STR);
-
-    // 혹시 모를 overflow 방지용
-    if (seed_len + 4 > sizeof(buf)) {
-        // 필요하면 여기서 assert나 error 처리
-        return;
-    }
-
-    // buf = "jiwoo" || idx(32-bit big-endian)
-    memcpy(buf, TEST_BASE_SEED_STR, seed_len);
-    buf[seed_len + 0] = (idx >> 24) & 0xFF;
-    buf[seed_len + 1] = (idx >> 16) & 0xFF;
-    buf[seed_len + 2] = (idx >>  8) & 0xFF;         
-    buf[seed_len + 3] = (idx      ) & 0xFF;
-
-    // SHA256("jiwoo" || idx) → 32바이트 entropy
-    sha256_Raw(buf, seed_len + 4, out);
-    memzero(buf, seed_len + 4);
-}
-static const char *generate_test_mnemonic(uint32_t idx) {
-    uint8_t entropy[32];
-
-    derive_test_entropy(idx, entropy);                        // ENT=256bit
-    const char *mnemo = mnemonic_from_data(entropy, sizeof(entropy));
-    memzero(entropy, sizeof(entropy));
-
-    // mnemonic_from_data()는 내부 static 버퍼에 문자열을 만들어서 포인터를 돌려줌.
-    // → 다음 호출에서 덮어쓰이므로 "한 번 쓰고 버리는" 용도로 써야 함.
-    return mnemo;
-}
-
 const uint8_t *config_getSeed(void) {
-  trigger_init_once();
   if (activeSessionCache == NULL) {
     fsm_sendFailure(FailureType_Failure_InvalidSession, "Invalid session");
     return NULL;
@@ -700,32 +620,15 @@ const uint8_t *config_getSeed(void) {
         return NULL;
       }
     }
-
-    // ------------------------------------------------------------------
-    // ## ✨ On-the-fly 50,000회 생성 및 검사 루프 시작 ##
-    // ------------------------------------------------------------------
-
-    for (uint32_t i = 0; i < 20000; i++) { // 실전에는 5000으로 설정
-      const char *tmp = generate_test_mnemonic(i);
-
-      // tmp → mnemonic 버퍼로 복사 (길이 제한 + 널 종료)
-      strncpy(mnemonic, tmp, MAX_MNEMONIC_LEN);
-      mnemonic[MAX_MNEMONIC_LEN] = '\0';
-
-      // if storage was not imported (i.e. it was properly generated or recovered)
-      bool imported = false;
-      config_get_bool(KEY_IMPORTED, &imported);
-      trigger_start();
-      sleep_ms(1U);
-      trigger_end();
-      if (!imported) {
-        // test whether mnemonic is a valid BIP-0039 mnemonic
-        if (!mnemonic_check(mnemonic)) {
-          // and if not then halt the device
-          error_shutdown(_("Storage failure"), _("detected."), NULL, NULL);
-        }
+    // if storage was not imported (i.e. it was properly generated or recovered)
+    bool imported = false;
+    config_get_bool(KEY_IMPORTED, &imported);
+    if (!imported) {
+      // test whether mnemonic is a valid BIP-0039 mnemonic
+      if (!mnemonic_check(mnemonic)) {
+        // and if not then halt the device
+        error_shutdown(_("Storage failure"), _("detected."), NULL, NULL);
       }
-      sleep_ms(1000U); //3초 대기, 파형 캡쳐 후 트리거 바로 대기 -> 5초 이내 없으면 캡쳐 중단해야 함 (키가 밀림)
     }
     char oldTiny = usbTiny(1);
     mnemonic_to_seed(mnemonic, passphrase, activeSessionCache->seed,
