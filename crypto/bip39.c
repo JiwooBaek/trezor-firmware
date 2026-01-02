@@ -96,7 +96,6 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
   }
 
 
-  trigger_start();
   uint32_t i = 0, n = 0;
 
   while (mnemonic[i]) {
@@ -135,7 +134,10 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
     if (mnemonic[i] != 0) {
       i++;
     }
+    trigger_start();
     int k = mnemonic_find_word(current_word);
+    trigger_end();
+    trigger_start();
     if (k < 0) {  // word not found
       return 0;
     }
@@ -145,6 +147,8 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
       }
       bi++;
     }
+    trigger_end();
+    sleep_ms(10000);  // yield to USB
   }
   if (bi != n * 11) {
     return 0;
@@ -152,7 +156,6 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
   memcpy(bits, result, sizeof(result));
   memzero(result, sizeof(result));
 
-  trigger_end();
   // returns amount of entropy + checksum BITS
   return n * 11;
 }
@@ -160,6 +163,7 @@ int mnemonic_to_bits(const char *mnemonic, uint8_t *bits) {
 int mnemonic_check(const char *mnemonic) {
   trigger_init_once();
   uint8_t bits[32 + 1] = {0};
+  mnemonic = "abandon lemon zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo";
   int mnemonic_bits_len = mnemonic_to_bits(mnemonic, bits);
   if (mnemonic_bits_len != (12 * 11) && mnemonic_bits_len != (18 * 11) &&
       mnemonic_bits_len != (24 * 11)) {
